@@ -1,0 +1,55 @@
+.recipe-module {
+    display: flex;
+    height: 100%;
+}
+
+
+/*Handles all CSS on navbar side(left) of module*/
+.recipe-module .recipe-nav-bar{
+    background-color: var(--secondary-color);
+    overflow-y: auto;
+    width: 250px;
+}
+
+.recipe-module .recipe-nav-bar ul{
+    list-style-type: none;
+}
+
+.recipe-module .recipe-nav-bar li{
+    padding: 4px 8px;
+}
+.recipe-module .recipe-nav-bar .active{
+    background-color: var(--active-color);
+}
+
+.recipe-module .recipe-nav-bar li:hover{
+    background-color: var(--active-color);
+    cursor: pointer;
+}
+
+
+/*Handles all CSS on recipe side(Right) of module*/
+.recipe-module .recipe{
+    text-align: center;
+    overflow-y: auto;
+}
+
+.recipe-module .recipe-container{
+    display: inline-block;
+    padding: 8px 16px;
+}
+
+
+/*Handles Ingredients CSS*/
+.recipe-module .ingredients ul
+{
+    text-align: left;
+    list-style-position: inside;
+}
+
+/*Handles Instructions CSS*/
+.recipe-module .instructions ul{
+    text-align: left;
+    list-style-type: decimal;
+    list-style-position: inside;
+}
