@@ -10,9 +10,9 @@ import (
 func Router2() *http.ServeMux {
 	mux := http.NewServeMux()
 
-	mux.Handle("/", http.FileServer(http.Dir("./build")))
+	//mux.Handle("/", http.FileServer(http.Dir("./build/index.html")))
 
-	mux.HandleFunc("/api/registerUser", RegisterUser)
+	/*mux.HandleFunc("/api/registerUser", RegisterUser)
 	mux.HandleFunc("/api/getAllUsers", GetAllUsers)
 	mux.HandleFunc("/api/getUser", GetUser)
 	mux.HandleFunc("/api/login", Login)
@@ -20,9 +20,9 @@ func Router2() *http.ServeMux {
 	mux.HandleFunc("/api/getTokenData", GetTokenData)
 
 	mux.HandleFunc("/api/createRecipe", CreateRecipe)
-	mux.HandleFunc("/api/getRecipes", GetRecipes)
 	mux.HandleFunc("/api/getUserRecipes", GetUserRecipes)
-	mux.HandleFunc("/api/getRecipe", GetRecipe)
+	mux.HandleFunc("/api/getRecipe", GetRecipe)*/
+	//mux.HandleFunc("/api/getAllRecipes", GetRecipes)
 
 	/*mux.HandleFunc("/api/addTodo", middleware.AddTodo)
 	mux.HandleFunc("/api/getTodoList", middleware.GetTodoList)
@@ -38,8 +38,6 @@ func Router() *mux.Router {
 
 	router := mux.NewRouter()
 
-	router.Handle("/", http.FileServer(http.Dir("./build")))
-
 	router.HandleFunc("/api/registerUser", RegisterUser)
 	router.HandleFunc("/api/getAllUsers", GetAllUsers)
 	router.HandleFunc("/api/getUser", GetUser)
@@ -48,8 +46,10 @@ func Router() *mux.Router {
 	router.HandleFunc("/api/getTokenData", GetTokenData).Methods("POST")
 
 	router.HandleFunc("/api/createRecipe", CreateRecipe)
-	router.HandleFunc("/api/getAllRecipes", GetRecipes).Methods("GET")
+	router.HandleFunc("/api/getAllRecipes", GetRecipes)
 	router.HandleFunc("/api/getUserRecipes", GetUserRecipes)
 	router.HandleFunc("/api/getRecipe", GetRecipe)
+
+	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./build/"))).Methods("GET")
 	return router
 }
