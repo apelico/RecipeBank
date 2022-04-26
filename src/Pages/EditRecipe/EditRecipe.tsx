@@ -12,13 +12,13 @@ export default function EditRecipe({ editType }: IEdit) {
 	const { username, recipeID } = useParams();
 
 	useEffect(() => {
-		if (editType == EditType.Create){
+		if (editType == EditType.Create) {
 			setRecipe({ recipeName: "", ingredients: [], instructions: [] })
 			return;
 		}
 
 		fetch('/api/getRecipe', {
-			method: 'POST', 
+			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ userOwner: username, id: recipeID })
 		}).then(response => response.json()).then(data => {
@@ -26,7 +26,7 @@ export default function EditRecipe({ editType }: IEdit) {
 		})
 	}, [location.key])
 
-	const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
+	function HandleSubmit(event: React.FormEvent<HTMLFormElement>) {
 		event.preventDefault();
 
 		if (editType == EditType.Create) {
@@ -40,24 +40,24 @@ export default function EditRecipe({ editType }: IEdit) {
 		}
 
 		if (editType == EditType.Edit) {
-			/*fetch('/api/updateRecipe', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify(recipe)
-		}).then(response => response.json()).then(data => {
+			fetch('/api/updateRecipe', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(recipe)
+			}).then(response => response.json()).then(data => {
 
-		})*/
+			})
 		}
 	}
 
-	const addIngredient = (): void => {
+	function AddIngredient() {
 		const r = { ...recipe }
 		r.ingredients?.push({ ingredientName: "", ingredientAmount: "" });
 
 		setRecipe(r as Recipe);
 	}
 
-	const updateIngredient = (index: number, ingredient: Ingredient): void => {
+	function UpdateIngredient(index: number, ingredient: Ingredient) {
 		const r = { ...recipe }
 		if (r.ingredients == undefined) return;
 
@@ -66,20 +66,20 @@ export default function EditRecipe({ editType }: IEdit) {
 		setRecipe(r as Recipe)
 	}
 
-	const removeIngredient = (index: number): void => {
+	function RemoveIngredient(index: number) {
 		const r = { ...recipe }
 		r.ingredients?.splice(index, 1)
 		setRecipe(r as Recipe)
 	}
 
-	const addInstruction = (): void => {
+	function AddInstruction() {
 		const r = { ...recipe }
 		r.instructions?.push("")
 
 		setRecipe(r as Recipe)
 	}
 
-	const updateInstruction = (index: number, value: string): void => {
+	function UpdateInstruction(index: number, value: string) {
 		const r = { ...recipe }
 		if (r.instructions == undefined) return;
 
@@ -88,97 +88,90 @@ export default function EditRecipe({ editType }: IEdit) {
 		setRecipe(r as Recipe)
 	}
 
-	const removeInstruction = (index: number): void => {
+	function RemoveInstruction(index: number) {
 		const r = { ...recipe }
 		r.instructions?.splice(index, 1)
 		setRecipe(r as Recipe)
 	}
 
-	interface IngredientProp {
-		ingredient: Ingredient;
-		index: number;
-	}
+	function RenderTitle() {
+		if (recipe === undefined) return
 
-	const RenderIngredient = (prop: IngredientProp) => {
 		return (
-			<div key={prop.index} className='inputs'>
-				<input type='text' onChange={e => {
-					e.preventDefault()
-					updateIngredient(prop.index, { ingredientName: e.target.value, ingredientAmount: prop.ingredient.ingredientAmount })
-				}}
-					value={prop.ingredient.ingredientName}
-					placeholder='ingredient' />
+			<input type='text' name='name' className='recipe-name' value={recipe?.recipeName} onChange={e => {
+				const r = { ...recipe }
+				r.recipeName = e.target.value;
 
-				<input type='text' onChange={e => {
-					e.preventDefault()
-					updateIngredient(prop.index, { ingredientName: prop.ingredient.ingredientName, ingredientAmount: e.target.value })
-				}}
-					value={prop.ingredient.ingredientAmount}
-					placeholder='amount' />
-
-				<button type='button' onClick={() => {
-					removeIngredient(prop.index)
-				}}>X</button>
-			</div>
+				setRecipe(r as Recipe);
+			}} placeholder='Recipe Name' />
 		)
 	}
 
-	interface InstructionProp {
-		instruction: string;
-		index: number;
-	}
-	const RenderInstructions = (prop: InstructionProp) => {
-		return (
-			<div key={prop.index} className='inputs'>
-				<input type='text' onChange={e => {
-					e.preventDefault()
-					updateInstruction(prop.index, e.target.value)
-				}}
-					value={prop.instruction}
-					placeholder='instruction' />
+	function RenderInstructions() {
+		if (recipe === undefined) return
 
-				<button type='button' onClick={() => {
-					removeInstruction(prop.index)
-				}}>X</button>
-			</div>
+		return (
+			recipe.instructions.map((instruction, index) => {
+				return <div key={index} className='inputs'>
+					<textarea onChange={e => {
+						UpdateInstruction(index, e.target.value)
+					}}
+						value={instruction}
+						placeholder='instruction' />
+
+					<button type='button' className='delete' onClick={() => {
+						RemoveInstruction(index)
+					}}>X</button>
+				</div>
+			})
 		)
 	}
 
-	const RenderForm = () => {
+	function RenderIngredients() {
+		if (recipe === undefined) return
+
 		return (
-			<form onSubmit={handleSubmit} className='edit-recipe'>
+			recipe.ingredients.map((ingredient, index: number) => {
+				return (
+					<div key={index} className='inputs'>
+						<input type='text' className='ingredient-name' onChange={e => {
+							UpdateIngredient(index, { ingredientName: e.target.value, ingredientAmount: ingredient.ingredientAmount })
+						}}
+							value={ingredient.ingredientName}
+							placeholder='ingredient' />
 
-				<input type='text' name='name' className='recipe-name' value={recipe?.recipeName} onChange={e => {
-					const r = { ...recipe }
-					r.recipeName = e.target.value;
+						<input type='text' className='ingredient-amount' onChange={e => {
+							UpdateIngredient(index, { ingredientName: ingredient.ingredientName, ingredientAmount: e.target.value })
+						}}
+							value={ingredient.ingredientAmount}
+							placeholder='amount' />
 
-					setRecipe(r as Recipe);
-				}} placeholder='Recipe Name' />
-
-				<h3>Ingredients</h3>
-				{
-					recipe?.ingredients.map((ingredient, index) => {
-						return (<RenderIngredient ingredient={ingredient} index={index} key={index} />)
-					})
-				}
-				<button type='button' value={'Add Ingredient'} onClick={addIngredient}>Add Ingredient</button>
-
-				<h3>Instructions</h3>
-				{recipe?.instructions.map((instruction, index) => {
-					return (<RenderInstructions instruction={instruction} index={0} key={index} />)
-				})}
-
-				<button type='button' value={'Add Instruction'} onClick={e => addInstruction()}>Add Instruction</button>
-				<br></br>
-				<input type='submit' />
-			</form>
+						<button type='button' className='delete' onClick={() => {
+							RemoveIngredient(index)
+						}}>X</button>
+					</div>
+				)
+			})
 		)
 	}
 
 	return (
 		<div className='page'>
-			<RenderForm />
+			<form className='edit-recipe' onSubmit={HandleSubmit}>
+				{RenderTitle()}
+
+				<h3>Ingredients</h3>
+				{RenderIngredients()}
+				<button type='button' value={'Add Ingredient'} onClick={AddIngredient}>Add Ingredient</button>
+
+				<h3>Instructions</h3>
+				{RenderInstructions()}
+
+				<button type='button' value={'Add Instruction'} onClick={e => AddInstruction()}>Add Instruction</button>
+				<br></br>
+				<input type='submit' />
+			</form>
 		</div>
-		
+
 	)
 }

@@ -46,6 +46,7 @@ func Router() *mux.Router {
 	router.HandleFunc("/api/getTokenData", GetTokenData).Methods("POST")
 
 	router.HandleFunc("/api/createRecipe", CreateRecipe)
+	router.HandleFunc("/api/updateRecipe", UpdateRecipe)
 	router.HandleFunc("/api/getAllRecipes", GetRecipes)
 	router.HandleFunc("/api/getUserRecipes", GetUserRecipes)
 	router.HandleFunc("/api/getRecipe", GetRecipe)

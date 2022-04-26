@@ -127,20 +127,13 @@ func CreateRecipe(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode("OK")
 }
 
-func getToken(length int) string {
-	randomBytes := make([]byte, 32)
-	_, err := rand.Read(randomBytes)
-	if err != nil {
-		panic(err)
-	}
-	return base32.StdEncoding.EncodeToString(randomBytes)[:length]
-}
-
-func TestCookie(r *http.Request) string {
+func UpdateRecipe(w http.ResponseWriter, r *http.Request) {
 	tokenCookie, _ := r.Cookie("token")
 
 	if tokenCookie == nil {
-		return "Invalid"
+		//Token was null. Return "Invalid"
+		json.NewEncoder(w).Encode("Invalid")
+		return
 	}
 
 	//Decodes the Hex Token Cookie
@@ -153,8 +146,38 @@ func TestCookie(r *http.Request) string {
 	json.Unmarshal([]byte(ValidateToken(string(decryptedToken))), &user)
 
 	if user.Username == "" {
-		return "Invalid"
+		//Token was invalid or expired. Return "Invalid"
+		json.NewEncoder(w).Encode("Invalid")
+		return
 	}
 
-	return "OK"
+	//Reads in data from request
+	body, _ := io.ReadAll(r.Body)
+
+	//Converts data to Recipe Model
+	var recipe models.Recipe
+	json.Unmarshal([]byte(body), &recipe)
+
+	if user.Username != recipe.UserOwner {
+		//UserToken does not much recipe UserOwner. To prevent another user from possibly updating another user's recipe.
+		json.NewEncoder(w).Encode("Invalid")
+		return
+	}
+
+	filter := bson.M{"userOwner": user.Username, "id": recipe.ID}
+
+	fmt.Println(filter)
+
+	RecipeDB.UpdateOne(context.TODO(), filter, bson.D{{"$set", recipe}})
+
+	json.NewEncoder(w).Encode("OK")
+}
+
+func getToken(length int) string {
+	randomBytes := make([]byte, 32)
+	_, err := rand.Read(randomBytes)
+	if err != nil {
+		panic(err)
+	}
+	return base32.StdEncoding.EncodeToString(randomBytes)[:length]
 }

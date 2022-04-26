@@ -16,6 +16,22 @@
     width: 100%;
 }
 
-.inputs input{
+.inputs .ingredient-name{
+    width: 75%;
+}
+
+.inputs .ingredient-amount{
+    width: 25%;
+}
+
+.inputs textarea{
     width: 100%;
+    height: 100px;
+    resize: none;
+}
+
+.inputs .delete{
+    width: 20px;
+    height: 20px;
+    background-color: rgb(226, 84, 84);
 }
