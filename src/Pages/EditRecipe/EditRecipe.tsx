@@ -45,7 +45,7 @@ export default function EditRecipe({ editType }: IEdit) {
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify(recipe)
 			}).then(response => response.json()).then(data => {
-
+				if (data == "OK") navigate("/")
 			})
 		}
 	}
