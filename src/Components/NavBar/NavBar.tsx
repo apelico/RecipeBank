@@ -25,7 +25,7 @@ export default function NavBar() {
   const RenderLoginButton = () => {
     if (username == '') {
       return (
-        <Nav.Link href='/login'>Login</Nav.Link>
+        <Nav.Link as={NavLink} to='/login'>Login</Nav.Link>
       )
     }
 
@@ -38,8 +38,8 @@ export default function NavBar() {
     if (username != '') {
       return (
         <>
-          <Nav.Link href='/Create'>Create</Nav.Link>
-          <Nav.Link href={`/users/${username}`}>MyRecipes</Nav.Link>
+          <Nav.Link as={NavLink} to='/Create'>Create</Nav.Link>
+          <Nav.Link as={NavLink} to={`/users/${username}`}>MyRecipes</Nav.Link>
         </>
       )
     }
@@ -74,9 +74,9 @@ export default function NavBar() {
   return (
     <Router>
       <Navbar bg="dark" variant="dark">
-          <Navbar.Brand href="/">Recipe Trunk</Navbar.Brand>
+          <Navbar.Brand as={NavLink} to="/">Recipe Trunk</Navbar.Brand>
           <Nav className="me-auto">
-            <Nav.Link href="/">Home</Nav.Link>
+            <Nav.Link as={NavLink} to="/">Home</Nav.Link>
 
             <RenderUserOption />
             <RenderLoginButton />
