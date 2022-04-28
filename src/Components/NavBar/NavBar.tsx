@@ -6,7 +6,6 @@ import {
   NavLink,
   useLocation
 } from 'react-router-dom'
-import CreateRecipe from "../../Pages/CreateRecipe/CreateRecipe";
 import Login from "../../Pages/Login/Login";
 import Register from "../../Pages/Register/Register";
 import Home from "../../Pages/Home/Home";
@@ -17,7 +16,7 @@ import UserPage from "../../Pages/UserPage/UserPage";
 import EditRecipe from "../../Pages/EditRecipe/EditRecipe";
 import RecipePage from "../../Pages/RecipePage/RecipePage";
 import { EditType } from "../../Interfaces";
-import { Container, Nav, Navbar } from "react-bootstrap";
+import { Nav, Navbar } from "react-bootstrap";
 
 export default function NavBar() {
   const { username, Logout, CheckUser } = useContext(userContext)
