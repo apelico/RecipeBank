@@ -76,7 +76,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 	//If passwords do match, create a token for the user that contains a JWT token signed with the user's Email and Firstname.
 	if password == user.Password {
-		var expirationTime = time.Now().Add(30 * time.Minute)
+		var expirationTime = time.Now().Add(120 * time.Minute)
 
 		var userClaim = models.UserClaims{Username: res.Username, FirstName: res.FirstName}
 		var token = SignClaim(userClaim, expirationTime.Unix())

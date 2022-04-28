@@ -164,10 +164,10 @@ func UpdateRecipe(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	//Search through the recipe database for recipe ID and also for userowner.
 	filter := bson.M{"userOwner": user.Username, "id": recipe.ID}
 
-	fmt.Println(filter)
-
+	//Updates the recipe
 	RecipeDB.UpdateOne(context.TODO(), filter, bson.D{{"$set", recipe}})
 
 	json.NewEncoder(w).Encode("OK")
@@ -177,7 +177,7 @@ func getToken(length int) string {
 	randomBytes := make([]byte, 32)
 	_, err := rand.Read(randomBytes)
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
 	}
 	return base32.StdEncoding.EncodeToString(randomBytes)[:length]
 }

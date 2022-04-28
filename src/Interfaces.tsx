@@ -9,6 +9,17 @@ export interface Recipe {
     userOwner?: string;
     ingredients: Ingredient[];
     instructions: string[];
+    recipeTag?: RecipeTag;
+}
+
+export enum RecipeTag{
+    Breakfast,
+    Lunch,
+    Dinner,
+    Meal,
+    Snack,
+    Drink,
+    Dessert
 }
 
 export interface User{

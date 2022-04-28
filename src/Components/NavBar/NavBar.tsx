@@ -17,6 +17,7 @@ import UserPage from "../../Pages/UserPage/UserPage";
 import EditRecipe from "../../Pages/EditRecipe/EditRecipe";
 import RecipePage from "../../Pages/RecipePage/RecipePage";
 import { EditType } from "../../Interfaces";
+import { Container, Nav, Navbar } from "react-bootstrap";
 
 export default function NavBar() {
   const { username, Logout, CheckUser } = useContext(userContext)
@@ -24,20 +25,12 @@ export default function NavBar() {
   const RenderLoginButton = () => {
     if (username == '') {
       return (
-        <>
-          <li>
-            <NavLink to='/Login'>Login</NavLink>
-          </li>
-        </>
+        <Nav.Link href='/Login'>Login</Nav.Link>
       )
     }
 
     return (
-      <>
-        <li>
-          <a onClick={Logout}>Logout</a>
-        </li>
-      </>
+      <Nav.Link onClick={Logout}>Logout</Nav.Link>
     )
   }
 
@@ -45,12 +38,8 @@ export default function NavBar() {
     if (username != '') {
       return (
         <>
-          <li>
-            <NavLink className={navData => (navData.isActive ? 'active' : '')} to='/Create'>Create</NavLink>
-          </li>
-          <li>
-            <NavLink className={navData => (navData.isActive ? 'active' : '')} to={`/users/${username}`}>MyRecipes</NavLink>
-          </li>
+          <Nav.Link href='/Create'>Create</Nav.Link>
+          <Nav.Link href={`/users/${username}`}>MyRecipes</Nav.Link>
         </>
       )
     }
@@ -63,7 +52,7 @@ export default function NavBar() {
     const location = useLocation();
     useEffect(() => {
       CheckUser()
-      
+
     }, [location]);
   };
 
@@ -84,17 +73,15 @@ export default function NavBar() {
 
   return (
     <Router>
-      <nav>
-        <ul>
-          <li>
-            <NavLink className={navData => (navData.isActive ? 'active' : '')} to='/'>Home</NavLink>
-          </li>
+      <Navbar bg="dark" variant="dark">
+          <Navbar.Brand href="/">Recipe Trunk</Navbar.Brand>
+          <Nav className="me-auto">
+            <Nav.Link href="/">Home</Nav.Link>
 
-          <RenderUserOption />
-
-          <RenderLoginButton />
-        </ul>
-      </nav>
+            <RenderUserOption />
+            <RenderLoginButton />
+          </Nav>
+      </Navbar>
 
       <HandleRoutes />
     </Router>

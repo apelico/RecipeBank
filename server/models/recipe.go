@@ -5,6 +5,7 @@ type Recipe struct {
 	ID           string        `bson:"id" json:"id"`
 	UserOwner    string        `bson:"userOwner" json:"userOwner"`
 	RecipeName   string        `bson:"recipeName" json:"recipeName"`
+	RecipeTag    string        `bson:"recipeTag" json:"recipeTag"`
 	Ingredients  []Ingredients `bson:"ingredients" json:"ingredients"`
 	Instructions []string      `bson:"instructions" json:"instructions"`
 }

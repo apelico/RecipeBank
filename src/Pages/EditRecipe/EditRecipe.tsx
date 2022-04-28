@@ -1,5 +1,6 @@
 import React from 'react'
 import { useEffect, useState } from 'react'
+import { Button, Form, FormControl, InputGroup, FloatingLabel } from 'react-bootstrap'
 import { useNavigate, useParams, useLocation } from 'react-router-dom'
 import { EditType, IEdit, Ingredient, Recipe } from '../../Interfaces'
 import './EditRecipe.css'
@@ -98,12 +99,14 @@ export default function EditRecipe({ editType }: IEdit) {
 		if (recipe === undefined) return
 
 		return (
-			<input type='text' name='name' className='recipe-name' value={recipe?.recipeName} onChange={e => {
-				const r = { ...recipe }
-				r.recipeName = e.target.value;
-
-				setRecipe(r as Recipe);
-			}} placeholder='Recipe Name' />
+			<InputGroup size="lg">
+				<FormControl placeholder='Recipe Name' value={recipe.recipeName} onChange={e => {
+					const r = { ...recipe }
+					r.recipeName = e.target.value;
+	
+					setRecipe(r as Recipe);
+				}} />
+		  	</InputGroup>
 		)
 	}
 
@@ -112,7 +115,19 @@ export default function EditRecipe({ editType }: IEdit) {
 
 		return (
 			recipe.instructions.map((instruction, index) => {
-				return <div key={index} className='inputs'>
+				return(
+				<InputGroup className='mb-3 ingredients'>
+					<FormControl placeholder='ingredient' value={instruction} onChange={e => {
+						UpdateInstruction(index, e.target.value)
+					}} />
+					<Button variant="danger" onClick={() => {
+						if(window.confirm("Are you sure you want to Delete?")) {
+							RemoveInstruction(index)
+						}
+					}}>Delete</Button>
+				</InputGroup>
+				)
+				/*<div key={index} className='inputs'>
 					<textarea onChange={e => {
 						UpdateInstruction(index, e.target.value)
 					}}
@@ -122,7 +137,7 @@ export default function EditRecipe({ editType }: IEdit) {
 					<button type='button' className='delete' onClick={() => {
 						RemoveInstruction(index)
 					}}>X</button>
-				</div>
+				</div>*/
 			})
 		)
 	}
@@ -133,23 +148,21 @@ export default function EditRecipe({ editType }: IEdit) {
 		return (
 			recipe.ingredients.map((ingredient, index: number) => {
 				return (
-					<div key={index} className='inputs'>
-						<input type='text' className='ingredient-name' onChange={e => {
-							UpdateIngredient(index, { ingredientName: e.target.value, ingredientAmount: ingredient.ingredientAmount })
-						}}
-							value={ingredient.ingredientName}
-							placeholder='ingredient' />
-
-						<input type='text' className='ingredient-amount' onChange={e => {
-							UpdateIngredient(index, { ingredientName: ingredient.ingredientName, ingredientAmount: e.target.value })
-						}}
-							value={ingredient.ingredientAmount}
-							placeholder='amount' />
-
-						<button type='button' className='delete' onClick={() => {
-							RemoveIngredient(index)
-						}}>X</button>
-					</div>
+					<>
+						<InputGroup className='mb-3 ingredients'>
+							<FormControl placeholder='ingredient' value={ingredient.ingredientName} onChange={e => {
+								UpdateIngredient(index, { ingredientName: e.target.value, ingredientAmount: ingredient.ingredientAmount })
+							}} />
+							<FormControl placeholder='amount' value={ingredient.ingredientAmount} onChange={e => {
+								UpdateIngredient(index, { ingredientName: ingredient.ingredientName, ingredientAmount: e.target.value })
+							}}/>
+							<Button variant="danger" onClick={() => {
+								if(window.confirm("Are you sure you want to Delete?")) {
+									RemoveIngredient(index)
+								}
+							}}>Delete</Button>
+						</InputGroup>
+					</>
 				)
 			})
 		)
@@ -162,14 +175,16 @@ export default function EditRecipe({ editType }: IEdit) {
 
 				<h3>Ingredients</h3>
 				{RenderIngredients()}
-				<button type='button' value={'Add Ingredient'} onClick={AddIngredient}>Add Ingredient</button>
+				<Button variant="primary" onClick={AddIngredient}>Add Ingredient</Button>
 
 				<h3>Instructions</h3>
 				{RenderInstructions()}
 
-				<button type='button' value={'Add Instruction'} onClick={e => AddInstruction()}>Add Instruction</button>
-				<br></br>
-				<input type='submit' />
+				<Button variant="primary" onClick={AddInstruction}>Add Instruction</Button>
+				<div>
+					<br></br>
+					<Button variant="primary" type='submit'>Submit</Button>
+				</div>
 			</form>
 		</div>
 

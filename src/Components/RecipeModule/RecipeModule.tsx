@@ -4,6 +4,7 @@ import { NavLink } from 'react-router-dom';
 import { useContext, useState } from 'react';
 
 import { userContext } from '../../Context'
+import { InputGroup, FormControl, ListGroup } from 'react-bootstrap';
 
 export default function RecipeModule({ recipeList, activeUser }: any) {
 	const recipes = recipeList as Recipe[]
@@ -27,17 +28,17 @@ export default function RecipeModule({ recipeList, activeUser }: any) {
 		<div className='recipe-module'>
 
 			<div className='recipe-nav-bar'>
-				<ul>
+				<ListGroup>
 					{
 						recipes.map((r, index) => {
 							return (
-								<li onClick={e => setRecipeIndex(index)} className={`${index == recipeIndex ? 'active' : ''} recipe-snippet`} key={index}>
+								<ListGroup.Item action onClick={e => setRecipeIndex(index)} className={`${index == recipeIndex ? 'active' : ''} recipe-snippet`} key={index}>
 									{r.recipeName}
-								</li>
+								</ListGroup.Item>
 							)
 						})
 					}
-				</ul>
+				</ListGroup>
 			</div>
 
 			<div className='recipe'>
@@ -51,30 +52,31 @@ export default function RecipeModule({ recipeList, activeUser }: any) {
 
 					<div className='ingredients'>
 						<h3>Ingredients</h3>
-						<ul>
+						<ListGroup>
 						{
 							recipes[recipeIndex].ingredients.map((ingredient, index) => {
 								return (
-									<li key={index}>
-										{ingredient.ingredientName}: {ingredient.ingredientAmount}
-									</li>
+									<ListGroup.Item key={index}>
+											<input type='checkbox' className='custom-control-input'></input>
+											{ingredient.ingredientName}: ${ingredient.ingredientAmount}
+									</ListGroup.Item>
 								)
 							})
 						}
-						</ul>
+						</ListGroup>
 					</div>
 
 					<div className='instructions'>
 						<h3>Instructions</h3>
-						<ul>
+						<ListGroup as='ol' numbered>
 							{
 								recipes[recipeIndex].instructions.map((instruction, index) => {
 									return (
-										<li key={index}>{instruction}</li>
+										<ListGroup.Item as='li' key={index}>{instruction}</ListGroup.Item>
 									)
 								})
 							}
-						</ul>
+						</ListGroup>
 					</div>
 				</div>
 

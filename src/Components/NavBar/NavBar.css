@@ -1,31 +1,5 @@
 nav{
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    background-color: black;
     height: var(--nav-bar-height);
     line-height: var(--nav-bar-height);
-}
-
-nav ul{
-    list-style-type: none;
-    text-align: center;
-}
-
-nav li{
-    display: inline-block;
-    padding: 0 10px;
-}
-
-nav li a, nav li p{
-    color:white;
-    font-weight: bold;
-    text-decoration: none;
-    font-size: 18px;
-}
-
-nav li a:hover{
-    cursor: pointer;
-    text-decoration: underline;
-    color:var(--active-color);
+    padding-left: 16px;
 }
