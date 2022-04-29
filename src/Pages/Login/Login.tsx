@@ -28,7 +28,7 @@ export default function Login() {
 
         fetch('/api/login', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', "Access-Control-Allow-Credentials": 'true' },
           body: JSON.stringify({username: inputs.username, password: inputs.password})
         }).then(response => response.json()).then(data => {
           if(data === "Incorrect Password"){
@@ -42,7 +42,7 @@ export default function Login() {
           }
 
           setUsername(data)
-          navigate('/')
+          //navigate('/')
         })
     }
 

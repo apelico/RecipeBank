@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 import { useContext, useState } from 'react';
 
 import { userContext } from '../../Context'
-import { InputGroup, FormControl, ListGroup, Tabs, Tab } from 'react-bootstrap';
+import { InputGroup, FormControl, ListGroup, Tabs, Tab, Modal } from 'react-bootstrap';
 
 export default function RecipeModule({ recipeList, activeUser }: any) {
 	const recipes = recipeList as Recipe[]
@@ -25,127 +25,95 @@ export default function RecipeModule({ recipeList, activeUser }: any) {
 		return <></>
 	}
 
+	function RenderRecipeList() {
+		return (
+			<ListGroup>
+				{
+					recipes.map((r, index) => {
+						return (
+							<ListGroup.Item action onClick={e => { setRecipeIndex(index); setKey("current"); }} className={`${index == recipeIndex ? 'active' : ''} recipe-snippet`} key={index}>
+								{r.recipeName}
+							</ListGroup.Item>
+						)
+					})
+				}
+			</ListGroup>
+		)
+	}
+
+	function RenderIngredientsList() {
+		return (
+			<ListGroup>
+				{
+					recipes[recipeIndex].ingredients.map((ingredient, index) => {
+						return (
+							<ListGroup.Item key={index}>
+								<input type='checkbox'></input>
+								{ingredient.ingredientName}: {ingredient.ingredientAmount}
+							</ListGroup.Item>
+						)
+					})
+				}
+			</ListGroup>
+		)
+	}
+
+	function RenderInstructionsList() {
+		return (
+			<ListGroup as='ol' numbered>
+				{
+					recipes[recipeIndex].instructions.map((instruction, index) => {
+						return (
+							<ListGroup.Item as='li' key={index}>{instruction}</ListGroup.Item>
+						)
+					})
+				}
+			</ListGroup>
+		)
+	}
+
 	return (
 		<>
-			<div className='recipe-module'>
+			<Tabs defaultActiveKey="profile" id="uncontrolled-tab-example" className="mb-3" activeKey={key} onSelect={(k) => setKey(k || "recipes")}>
 
-				<div className='recipe-nav-bar'>
-					<ListGroup>
-						{
-							recipes.map((r, index) => {
-								return (
-									<ListGroup.Item action onClick={e => setRecipeIndex(index)} className={`${index == recipeIndex ? 'active' : ''} recipe-snippet`} key={index}>
-										{r.recipeName}
-									</ListGroup.Item>
-								)
-							})
-						}
-					</ListGroup>
-				</div>
+				<Tab eventKey="recipes" title="Recipes">
+					{RenderRecipeList()}
+				</Tab>
 
-				<div className='recipe'>
-					<div className='recipe-container'>
-						<div className='header'>
-							<h3>{recipes[recipeIndex].recipeName} </h3>
+				<Tab eventKey="current" title="Current">
+					<Modal.Dialog>
+						<Modal.Header>
+							<Modal.Title>{recipes[recipeIndex].recipeName}</Modal.Title>
+						</Modal.Header>
+
+						<Modal.Body>
 							<ShowEditButton />
 							By: <NavLink to={`/users/${recipes[recipeIndex].userOwner}`}>{recipes[recipeIndex].userOwner}</NavLink> <br></br>
 							<NavLink to={`/users/${recipes[recipeIndex].userOwner}/${recipes[recipeIndex].id}`}>View Recipe Link</NavLink>
-						</div>
+						</Modal.Body>
+					</Modal.Dialog>
 
-						<div className='ingredients'>
-							<h3>Ingredients</h3>
-							<ListGroup>
-								{
-									recipes[recipeIndex].ingredients.map((ingredient, index) => {
-										return (
-											<ListGroup.Item key={index}>
-												<input type='checkbox' className='custom-control-input'></input>
-												{ingredient.ingredientName}: {ingredient.ingredientAmount}
-											</ListGroup.Item>
-										)
-									})
-								}
-							</ListGroup>
-						</div>
+					<Modal.Dialog>
+						<Modal.Header>
+							<Modal.Title>Ingredients</Modal.Title>
+						</Modal.Header>
 
-						<div className='instructions'>
-							<h3>Instructions</h3>
-							<ListGroup as='ol' numbered>
-								{
-									recipes[recipeIndex].instructions.map((instruction, index) => {
-										return (
-											<ListGroup.Item as='li' key={index}>{instruction}</ListGroup.Item>
-										)
-									})
-								}
-							</ListGroup>
-						</div>
-					</div>
-				</div>
+						<Modal.Body>
+							{RenderIngredientsList()}
+						</Modal.Body>
+					</Modal.Dialog>
 
-			</div>
+					<Modal.Dialog>
+						<Modal.Header>
+							<Modal.Title>Instructions</Modal.Title>
+						</Modal.Header>
+
+						<Modal.Body>
+							{RenderInstructionsList()}
+						</Modal.Body>
+					</Modal.Dialog>
+				</Tab>
+			</Tabs>
 		</>
 	)
 }
-
-/*
-			<div className='mobile'>
-				<Tabs defaultActiveKey="profile" id="uncontrolled-tab-example" className="mb-3" activeKey={key} onSelect={(k) => setKey(k || "recipes")}>
-
-					<Tab eventKey="recipes" title="Recipes">
-						<ListGroup>
-							{
-								recipes.map((r, index) => {
-									return (
-										<ListGroup.Item action onClick={e => {setKey("current"); setRecipeIndex(index)}} className={`${index == recipeIndex ? 'active' : ''} recipe-snippet`} key={index}>
-											{r.recipeName}
-										</ListGroup.Item>
-									)
-								})
-							}
-						</ListGroup>
-					</Tab>
-
-					<Tab eventKey="current" title="Current">
-						<div className='recipe-container'>
-							<div className='header'>
-								<h3>{recipes[recipeIndex].recipeName} </h3>
-								<ShowEditButton />
-								By: <NavLink to={`/users/${recipes[recipeIndex].userOwner}`}>{recipes[recipeIndex].userOwner}</NavLink> <br></br>
-								<NavLink to={`/users/${recipes[recipeIndex].userOwner}/${recipes[recipeIndex].id}`}>View Recipe Link</NavLink>
-							</div>
-
-							<div className='ingredients'>
-								<h3>Ingredients</h3>
-								<ListGroup>
-									{
-										recipes[recipeIndex].ingredients.map((ingredient, index) => {
-											return (
-												<ListGroup.Item key={index}>
-													<input type='checkbox' className='custom-control-input'></input>
-													{ingredient.ingredientName}: ${ingredient.ingredientAmount}
-												</ListGroup.Item>
-											)
-										})
-									}
-								</ListGroup>
-							</div>
-
-							<div className='instructions'>
-								<h3>Instructions</h3>
-								<ListGroup as='ol' numbered>
-									{
-										recipes[recipeIndex].instructions.map((instruction, index) => {
-											return (
-												<ListGroup.Item as='li' key={index}>{instruction}</ListGroup.Item>
-											)
-										})
-									}
-								</ListGroup>
-							</div>
-						</div>
-					</Tab>
-				</Tabs>
-
-			</div>
-*/

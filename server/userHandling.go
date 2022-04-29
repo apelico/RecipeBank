@@ -87,7 +87,6 @@ func Login(w http.ResponseWriter, r *http.Request) {
 			Name:     "token",
 			Value:    hexToken,
 			HttpOnly: true,
-			Secure:   true,
 			Path:     "/",
 			Expires:  expirationTime,
 		}
@@ -110,7 +109,6 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 		Name:     "token",
 		Value:    "",
 		HttpOnly: true,
-		Secure:   true,
 		Path:     "/",
 		Expires:  time.Now(),
 	}

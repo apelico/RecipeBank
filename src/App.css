@@ -7,16 +7,5 @@
     --main-color: white;
     --secondary-color: rgb(200, 200, 200);
     --active-color: rgb(0, 153, 255);
-    --nav-bar-height: 50px;
-    --nav-bar-width: 200px;
-}
-
-#root {
-    height: 100vh;
-}
-
-body {
-    /*background: linear-gradient(0,rgb(240,240,240) 80%,var(--secondary-color) 80%) no-repeat;*/
-    background-size: contain;
-    height: 100%;
+    margin-bottom: 50px;
 }

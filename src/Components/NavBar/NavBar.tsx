@@ -50,7 +50,7 @@ export default function NavBar() {
   const useCheckRouteChange = () => {
     const location = useLocation();
     useEffect(() => {
-      CheckUser()
+      //CheckUser()
 
     }, [location]);
   };
@@ -73,7 +73,7 @@ export default function NavBar() {
   return (
     <Router>
       <Navbar bg="dark" variant="dark">
-          <Navbar.Brand as={NavLink} to="/">Recipe Trunk</Navbar.Brand>
+          <Navbar.Brand className="desktop" as={NavLink} to="/">Recipe Trunk</Navbar.Brand>
           <Nav className="me-auto">
             <Nav.Link as={NavLink} to="/">Home</Nav.Link>
 
