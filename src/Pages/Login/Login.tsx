@@ -42,7 +42,7 @@ export default function Login() {
           }
 
           setUsername(data)
-          //navigate('/')
+          navigate('/')
         })
     }
 

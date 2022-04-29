@@ -121,23 +121,10 @@ export default function EditRecipe({ editType }: IEdit) {
 						UpdateInstruction(index, e.target.value)
 					}} />
 					<Button variant="danger" onClick={() => {
-						if(window.confirm("Are you sure you want to Delete?")) {
-							RemoveInstruction(index)
-						}
+						RemoveInstruction(index)
 					}}>Delete</Button>
 				</InputGroup>
 				)
-				/*<div key={index} className='inputs'>
-					<textarea onChange={e => {
-						UpdateInstruction(index, e.target.value)
-					}}
-						value={instruction}
-						placeholder='instruction' />
-
-					<button type='button' className='delete' onClick={() => {
-						RemoveInstruction(index)
-					}}>X</button>
-				</div>*/
 			})
 		)
 	}
@@ -157,9 +144,7 @@ export default function EditRecipe({ editType }: IEdit) {
 								UpdateIngredient(index, { ingredientName: ingredient.ingredientName, ingredientAmount: e.target.value })
 							}}/>
 							<Button variant="danger" onClick={() => {
-								if(window.confirm("Are you sure you want to Delete?")) {
-									RemoveIngredient(index)
-								}
+								RemoveIngredient(index)
 							}}>Delete</Button>
 						</InputGroup>
 					</>

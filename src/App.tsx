@@ -14,13 +14,11 @@ function App() {
   }, [])
 
   function Logout() {
-    if (window.confirm("Are you sure you want to Logout?")) {
-      fetch("/api/logout", {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-      })
-      setUsername("");
-    }
+    fetch("/api/logout", {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+    })
+    setUsername("");
   }
 
   //Checks if the Token is valid and not expired and returns the user's username to be stored in session storage
