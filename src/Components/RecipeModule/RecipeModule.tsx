@@ -27,7 +27,7 @@ export default function RecipeModule({ recipeList, activeUser }: any) {
 
 	return (
 		<>
-			<div className='recipe-module desktop'>
+			<div className='recipe-module'>
 
 				<div className='recipe-nav-bar'>
 					<ListGroup>
@@ -60,7 +60,7 @@ export default function RecipeModule({ recipeList, activeUser }: any) {
 										return (
 											<ListGroup.Item key={index}>
 												<input type='checkbox' className='custom-control-input'></input>
-												{ingredient.ingredientName}: ${ingredient.ingredientAmount}
+												{ingredient.ingredientName}: {ingredient.ingredientAmount}
 											</ListGroup.Item>
 										)
 									})
