@@ -72,6 +72,16 @@ export default function NavBar() {
 
   return (
     <Router>
+      <Navbar bg="dark" variant="dark">
+          <Navbar.Brand as={NavLink} to="/">Recipe Trunk</Navbar.Brand>
+          <Nav className="me-auto">
+            <Nav.Link as={NavLink} to="/">Home</Nav.Link>
+
+            <RenderUserOption />
+            <RenderLoginButton />
+          </Nav>
+      </Navbar>
+
       <HandleRoutes />
     </Router>
   );
