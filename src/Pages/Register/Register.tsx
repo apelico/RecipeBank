@@ -1,8 +1,9 @@
 import './Register.css'
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import { Form, Modal, Button, Alert } from 'react-bootstrap';
 
-interface LoginInputs{
+interface LoginInputs {
     firstName: string;
     lastName: string;
     email: string;
@@ -24,7 +25,7 @@ export default function RegisterPage() {
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
         event.preventDefault();
 
-        if(inputs.password !== inputs.passwordConfirmation){
+        if (inputs.password !== inputs.passwordConfirmation) {
             setError("Password does not match")
             return;
         }
@@ -45,17 +46,57 @@ export default function RegisterPage() {
         })
     }
 
+    function ShowError() {
+        if (error === "") return;
+
+        return (
+            <Alert variant="danger" onClose={() => setError("")} dismissible>
+                <Alert.Heading>{error}</Alert.Heading>
+            </Alert>
+        )
+    }
+
     return (
-        <form className='register' autoComplete='off' onSubmit={handleSubmit}>
-            <p>Register</p>
-            <input type="text" name='firstName' required onChange={handleChange} placeholder='First name' />
-            <input type="text" name='lastName' required onChange={handleChange} placeholder='Last name' />
-            <input type="email" name='email' required onChange={handleChange} placeholder='Email' />
-            <input type="text" name='username' required onChange={handleChange} placeholder='Username' />
-            <input type="password" name='password' required onChange={handleChange} placeholder='Password' />
-            <input type="password" name='passwordConfirmation' required onChange={handleChange} placeholder='Confirm Password' />
-            <span>{error}</span>
-            <input type='submit' />
-        </form>
+        <>
+            <Form onSubmit={handleSubmit}>
+                <Modal.Dialog>
+                    <Modal.Header>
+                        <Modal.Title>Register</Modal.Title>
+                    </Modal.Header>
+                    {ShowError()}
+                    <Modal.Body>
+                        <Form.Group className="mb-3" controlId="formGroupPassword">
+                            <Form.Label>First Name</Form.Label>
+                            <Form.Control type="text" placeholder="First Name" name='firstName' required onChange={handleChange} />
+                        </Form.Group>
+                        <Form.Group className="mb-3" controlId="formGroupPassword">
+                            <Form.Label>Last Name</Form.Label>
+                            <Form.Control type="text" placeholder="Last Name" name='lastName' required onChange={handleChange} />
+                        </Form.Group>
+                        <Form.Group className="mb-3" controlId="formGroupEmail">
+                            <Form.Label>Email address</Form.Label>
+                            <Form.Control type="email" placeholder="Email" name='email' required onChange={handleChange} />
+                        </Form.Group>
+                        <Form.Group className="mb-3" controlId="formGroupPassword">
+                            <Form.Label>Username</Form.Label>
+                            <Form.Control type="text" placeholder="Username" name='username' required onChange={handleChange} />
+                        </Form.Group>
+                        <Form.Group className="mb-3" controlId="formGroupPassword">
+                            <Form.Label>Password</Form.Label>
+                            <Form.Control type="password" placeholder="Password" name='password' required onChange={handleChange} />
+                        </Form.Group>
+                        <Form.Group className="mb-3" controlId="formGroupPassword">
+                            <Form.Label> ConfirmPassword</Form.Label>
+                            <Form.Control type="password" placeholder="Password Confirmation" name='passwordConfirmation' required onChange={handleChange} />
+                        </Form.Group>
+                        <Button variant="primary" type="submit">
+                            Register
+                        </Button>
+                    </Modal.Body>
+
+                </Modal.Dialog>
+
+            </Form>
+        </>
     )
 }

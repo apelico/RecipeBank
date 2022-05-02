@@ -1,6 +1,6 @@
 import React from 'react'
 import { useEffect, useState } from 'react'
-import { Button, Form, FormControl, InputGroup, FloatingLabel } from 'react-bootstrap'
+import { Button, FormControl, InputGroup, Modal } from 'react-bootstrap'
 import { useNavigate, useParams, useLocation } from 'react-router-dom'
 import { EditType, IEdit, Ingredient, Recipe } from '../../Interfaces'
 import './EditRecipe.css'
@@ -13,8 +13,8 @@ export default function EditRecipe({ editType }: IEdit) {
 	const { username, recipeID } = useParams();
 
 	useEffect(() => {
-		if (editType == EditType.Create) {
-			setRecipe({ recipeName: "", ingredients: [], instructions: [] })
+		if (editType === EditType.Create) {
+			setRecipe({ recipeName: "", ingredients: [{ ingredientName: "", ingredientAmount: "" }], instructions: [""] })
 			return;
 		}
 
@@ -30,23 +30,23 @@ export default function EditRecipe({ editType }: IEdit) {
 	function HandleSubmit(event: React.FormEvent<HTMLFormElement>) {
 		event.preventDefault();
 
-		if (editType == EditType.Create) {
+		if (editType === EditType.Create) {
 			fetch('/api/createRecipe', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify(recipe)
 			}).then(response => response.json()).then(data => {
-				if (data == "OK") navigate("/")
+				if (data === "OK") navigate("/")
 			})
 		}
 
-		if (editType == EditType.Edit) {
+		if (editType === EditType.Edit) {
 			fetch('/api/updateRecipe', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify(recipe)
 			}).then(response => response.json()).then(data => {
-				if (data == "OK") navigate("/")
+				if (data === "OK") navigate("/")
 			})
 		}
 	}
@@ -60,7 +60,7 @@ export default function EditRecipe({ editType }: IEdit) {
 
 	function UpdateIngredient(index: number, ingredient: Ingredient) {
 		const r = { ...recipe }
-		if (r.ingredients == undefined) return;
+		if (r.ingredients === undefined) return;
 
 		r.ingredients[index] = ingredient
 
@@ -82,7 +82,7 @@ export default function EditRecipe({ editType }: IEdit) {
 
 	function UpdateInstruction(index: number, value: string) {
 		const r = { ...recipe }
-		if (r.instructions == undefined) return;
+		if (r.instructions === undefined) return;
 
 		r.instructions[index] = value
 
@@ -100,13 +100,13 @@ export default function EditRecipe({ editType }: IEdit) {
 
 		return (
 			<InputGroup size="lg">
-				<FormControl placeholder='Recipe Name' value={recipe.recipeName} onChange={e => {
+				<FormControl className='title' placeholder='Recipe Name' required value={recipe.recipeName} onChange={e => {
 					const r = { ...recipe }
 					r.recipeName = e.target.value;
-	
+
 					setRecipe(r as Recipe);
 				}} />
-		  	</InputGroup>
+			</InputGroup>
 		)
 	}
 
@@ -115,15 +115,15 @@ export default function EditRecipe({ editType }: IEdit) {
 
 		return (
 			recipe.instructions.map((instruction, index) => {
-				return(
-				<InputGroup className='mb-3 ingredients'>
-					<FormControl placeholder='ingredient' value={instruction} onChange={e => {
-						UpdateInstruction(index, e.target.value)
-					}} />
-					<Button variant="danger" onClick={() => {
-						RemoveInstruction(index)
-					}}>Delete</Button>
-				</InputGroup>
+				return (
+					<InputGroup className='mb-3 ingredients'>
+						<FormControl placeholder='instruction' value={instruction} onChange={e => {
+							UpdateInstruction(index, e.target.value)
+						}} />
+						<Button variant="danger" onClick={() => {
+							RemoveInstruction(index)
+						}}>Delete</Button>
+					</InputGroup>
 				)
 			})
 		)
@@ -142,7 +142,7 @@ export default function EditRecipe({ editType }: IEdit) {
 							}} />
 							<FormControl placeholder='amount' value={ingredient.ingredientAmount} onChange={e => {
 								UpdateIngredient(index, { ingredientName: ingredient.ingredientName, ingredientAmount: e.target.value })
-							}}/>
+							}} />
 							<Button variant="danger" onClick={() => {
 								RemoveIngredient(index)
 							}}>Delete</Button>
@@ -154,24 +154,26 @@ export default function EditRecipe({ editType }: IEdit) {
 	}
 
 	return (
-		<div className='page'>
-			<form className='edit-recipe' onSubmit={HandleSubmit}>
-				{RenderTitle()}
+		<form className='edit-recipe' onSubmit={HandleSubmit}>
+			<Modal.Dialog>
+				<Modal.Header>
+					<Modal.Title>{RenderTitle()}</Modal.Title>
+				</Modal.Header>
 
-				<h3>Ingredients</h3>
-				{RenderIngredients()}
-				<Button variant="primary" onClick={AddIngredient}>Add Ingredient</Button>
+				<Modal.Body>
+					{RenderIngredients()}
+					<Button variant="primary" onClick={AddIngredient}>Add Ingredient</Button>
+				</Modal.Body>
 
-				<h3>Instructions</h3>
-				{RenderInstructions()}
+				<Modal.Body>
+					{RenderInstructions()}
+					<Button variant="primary" onClick={AddInstruction}>Add Instruction</Button>
+				</Modal.Body>
 
-				<Button variant="primary" onClick={AddInstruction}>Add Instruction</Button>
-				<div>
-					<br></br>
+				<Modal.Body>
 					<Button variant="primary" type='submit'>Submit</Button>
-				</div>
-			</form>
-		</div>
-
+				</Modal.Body>
+			</Modal.Dialog>
+		</form>
 	)
 }

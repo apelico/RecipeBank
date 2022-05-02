@@ -1,9 +1,15 @@
-.edit-recipe{
-    max-width: 75%;
-    margin: 0 auto;
+.edit-recipe .modal-dialog{
+    max-width: 750px;
+}
+
+.edit-recipe .modal-title{
+    width: 100%;
+}
+
+.edit-recipe .title{
     text-align: center;
 }
 
-.ingredients input:nth-child(1){
-    flex: 30%;
+.edit-recipe .ingredients input:nth-child(2){
+    max-width: 250px;
 }
