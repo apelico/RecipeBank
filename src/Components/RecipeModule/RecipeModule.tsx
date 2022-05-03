@@ -49,7 +49,7 @@ export default function RecipeModule({ recipeList, activeUser }: any) {
 						return (
 							<ListGroup.Item key={index}>
 								<input type='checkbox'></input>
-								{ingredient.ingredientName}: {ingredient.ingredientAmount}
+								{" "}{ingredient.ingredientAmount} {ingredient.ingredientName}
 							</ListGroup.Item>
 						)
 					})
@@ -72,9 +72,19 @@ export default function RecipeModule({ recipeList, activeUser }: any) {
 		)
 	}
 
+	function RenderImage(image: string){
+		if(image === "") return
+
+		return(
+			<Modal.Dialog>
+				<img className='recipe-image' src={image} />
+			</Modal.Dialog>
+		)
+	}
+
 	return (
 		<>
-			<Tabs defaultActiveKey="profile" id="uncontrolled-tab-example" className="mb-3" activeKey={key} onSelect={(k) => setKey(k || "recipes")}>
+			<Tabs defaultActiveKey="profile" id="uncontrolled-tab-example" className="mb-3 recipe" activeKey={key} onSelect={(k) => setKey(k || "recipes")}>
 
 				<Tab eventKey="recipes" title="Recipes">
 					{RenderRecipeList()}
@@ -92,6 +102,8 @@ export default function RecipeModule({ recipeList, activeUser }: any) {
 							<NavLink to={`/users/${recipes[recipeIndex].userOwner}/${recipes[recipeIndex].id}`}>View Recipe Link</NavLink>
 						</Modal.Body>
 					</Modal.Dialog>
+
+					{RenderImage(recipes[recipeIndex].image || "")}
 
 					<Modal.Dialog>
 						<Modal.Header>

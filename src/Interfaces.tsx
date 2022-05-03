@@ -10,6 +10,7 @@ export interface Recipe {
     ingredients: Ingredient[];
     instructions: string[];
     recipeTag?: RecipeTag;
+    image?: string;
 }
 
 export enum RecipeTag{

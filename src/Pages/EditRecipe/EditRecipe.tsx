@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { Button, FormControl, InputGroup, Modal } from 'react-bootstrap'
 import { useNavigate, useParams, useLocation } from 'react-router-dom'
 import { EditType, IEdit, Ingredient, Recipe } from '../../Interfaces'
+import Resizer from "react-image-file-resizer";
 import './EditRecipe.css'
 
 export default function EditRecipe({ editType }: IEdit) {
@@ -27,6 +28,22 @@ export default function EditRecipe({ editType }: IEdit) {
 		})
 	}, [location.key])
 
+	const resizeFile = (file: any) =>
+		new Promise((resolve) => {
+			Resizer.imageFileResizer(
+				file,
+				1024,
+				1024,
+				"JPEG",
+				50,
+				0,
+				(uri) => {
+					resolve(uri);
+				},
+				"base64"
+			);
+		});
+
 	function HandleSubmit(event: React.FormEvent<HTMLFormElement>) {
 		event.preventDefault();
 
@@ -49,6 +66,30 @@ export default function EditRecipe({ editType }: IEdit) {
 				if (data === "OK") navigate("/")
 			})
 		}
+	}
+
+	const convertToBase64 = (file: any) => {
+		return new Promise((resolve, reject) => {
+			const fileReader = new FileReader();
+			fileReader.readAsDataURL(file);
+			fileReader.onload = () => {
+				resolve(fileReader.result);
+			};
+			fileReader.onerror = (error) => {
+				reject(error);
+			};
+		});
+	};
+
+	async function SetRecipeImage(imageFile: any) {
+		if (recipe === undefined) return;
+
+		const resizedFile = await resizeFile(imageFile)
+		
+		const r = { ...recipe }
+		r.image = resizedFile as string;
+
+		setRecipe(r as Recipe);
 	}
 
 	function AddIngredient() {
@@ -116,7 +157,7 @@ export default function EditRecipe({ editType }: IEdit) {
 		return (
 			recipe.instructions.map((instruction, index) => {
 				return (
-					<InputGroup className='mb-3 ingredients'>
+					<InputGroup key={index} className='mb-3 ingredients'>
 						<FormControl placeholder='instruction' value={instruction} onChange={e => {
 							UpdateInstruction(index, e.target.value)
 						}} />
@@ -135,21 +176,28 @@ export default function EditRecipe({ editType }: IEdit) {
 		return (
 			recipe.ingredients.map((ingredient, index: number) => {
 				return (
-					<>
-						<InputGroup className='mb-3 ingredients'>
-							<FormControl placeholder='ingredient' value={ingredient.ingredientName} onChange={e => {
-								UpdateIngredient(index, { ingredientName: e.target.value, ingredientAmount: ingredient.ingredientAmount })
-							}} />
-							<FormControl placeholder='amount' value={ingredient.ingredientAmount} onChange={e => {
-								UpdateIngredient(index, { ingredientName: ingredient.ingredientName, ingredientAmount: e.target.value })
-							}} />
-							<Button variant="danger" onClick={() => {
-								RemoveIngredient(index)
-							}}>Delete</Button>
-						</InputGroup>
-					</>
+					<InputGroup key={index} className='mb-3 ingredients'>
+						<FormControl placeholder='ingredient' value={ingredient.ingredientName} onChange={e => {
+							UpdateIngredient(index, { ingredientName: e.target.value, ingredientAmount: ingredient.ingredientAmount })
+						}} />
+						<FormControl placeholder='amount' value={ingredient.ingredientAmount} onChange={e => {
+							UpdateIngredient(index, { ingredientName: ingredient.ingredientName, ingredientAmount: e.target.value })
+						}} />
+						<Button variant="danger" onClick={() => {
+							RemoveIngredient(index)
+						}}>Delete</Button>
+					</InputGroup>
 				)
 			})
+		)
+	}
+
+	function RenderImage() {
+		return (
+			<>
+				<img className='recipe-image' src={recipe?.image} />
+				<input type='file' name='image' accept="image/*" onChange={e => { if (e.target.files !== null) { SetRecipeImage(e.target.files[0]) } }} />
+			</>
 		)
 	}
 
@@ -159,6 +207,10 @@ export default function EditRecipe({ editType }: IEdit) {
 				<Modal.Header>
 					<Modal.Title>{RenderTitle()}</Modal.Title>
 				</Modal.Header>
+
+				<Modal.Body>
+					{RenderImage()}
+				</Modal.Body>
 
 				<Modal.Body>
 					{RenderIngredients()}
