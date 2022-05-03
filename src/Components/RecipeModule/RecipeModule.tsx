@@ -72,10 +72,10 @@ export default function RecipeModule({ recipeList, activeUser }: any) {
 		)
 	}
 
-	function RenderImage(image: string){
-		if(image === "") return
+	function RenderImage(image: string) {
+		if (image === "") return
 
-		return(
+		return (
 			<Modal.Dialog>
 				<img className='recipe-image' src={image} />
 			</Modal.Dialog>
@@ -84,7 +84,7 @@ export default function RecipeModule({ recipeList, activeUser }: any) {
 
 	return (
 		<>
-			<Tabs defaultActiveKey="profile" id="uncontrolled-tab-example" className="mb-3" activeKey={key} onSelect={(k) => setKey(k || "recipes")}>
+			<Tabs defaultActiveKey="profile" id="uncontrolled-tab-example" className="mb-3 recipe-module" activeKey={key} onSelect={(k) => setKey(k || "recipes")}>
 
 				<Tab eventKey="recipes" title="Recipes">
 					{RenderRecipeList()}
@@ -93,12 +93,10 @@ export default function RecipeModule({ recipeList, activeUser }: any) {
 				<Tab eventKey="current" title="Current">
 					<Modal.Dialog>
 						<Modal.Header>
-							<Modal.Title>{recipes[recipeIndex].recipeName}</Modal.Title>
+							<Modal.Title>{recipes[recipeIndex].recipeName}</Modal.Title> <Modal.Title><span className='recipe-owner'>by: <NavLink to={`/users/${recipes[recipeIndex].userOwner}`}>{recipes[recipeIndex].userOwner}</NavLink></span></Modal.Title>
 						</Modal.Header>
-
 						<Modal.Body>
 							<ShowEditButton />
-							By: <NavLink to={`/users/${recipes[recipeIndex].userOwner}`}>{recipes[recipeIndex].userOwner}</NavLink> <br></br>
 							<NavLink to={`/users/${recipes[recipeIndex].userOwner}/${recipes[recipeIndex].id}`}>View Recipe Link</NavLink>
 						</Modal.Body>
 					</Modal.Dialog>

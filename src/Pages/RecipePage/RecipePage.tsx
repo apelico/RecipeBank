@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
+import { ListGroup, Modal, Tab, Tabs } from 'react-bootstrap';
 import { NavLink, useParams } from 'react-router-dom';
+import RecipeModule from '../../Components/RecipeModule/RecipeModule';
 import { Recipe } from '../../Interfaces'
 import './RecipePage.css'
 
@@ -17,42 +19,80 @@ export default function RecipePage() {
     })
   }, [])
 
+  function RenderIngredientsList() {
+    if (recipe === undefined) return;
+
+    return (
+      <ListGroup>
+        {
+          recipe.ingredients.map((ingredient, index) => {
+            return (
+              <ListGroup.Item key={index}>
+                <input type='checkbox'></input>
+                {" "}{ingredient.ingredientAmount} {ingredient.ingredientName}
+              </ListGroup.Item>
+            )
+          })
+        }
+      </ListGroup>
+    )
+  }
+
+  function RenderInstructionsList() {
+    if (recipe === undefined) return;
+
+    return (
+      <ListGroup as='ol' numbered>
+        {
+          recipe.instructions.map((instruction, index) => {
+            return (
+              <ListGroup.Item as='li' key={index}>{instruction}</ListGroup.Item>
+            )
+          })
+        }
+      </ListGroup>
+    )
+  }
+
+  function RenderImage(image: string) {
+    if (image === "") return
+
+    return (
+      <Modal.Dialog>
+        <img className='recipe-image' src={image} />
+      </Modal.Dialog>
+    )
+  }
+
   return (
-    <div className='page'>
-      <div className='recipe'>
-        <div className='header'>
-          <h3>{recipe?.recipeName} </h3>
-          By: <NavLink to={`/users/${recipe?.userOwner}`}>{recipe?.userOwner}</NavLink> <br></br>
-        </div>
+    <>
+      <Modal.Dialog>
+        <Modal.Header>
+          <Modal.Title>{recipe?.recipeName}</Modal.Title> <Modal.Title><span className='recipe-owner'>by: <NavLink to={`/users/${recipe?.userOwner}`}>{recipe?.userOwner}</NavLink></span></Modal.Title>
+        </Modal.Header>
+      </Modal.Dialog>
 
-        <div className='ingredients'>
-          <h3>Ingredients</h3>
-          <ul>
-            {
-              recipe?.ingredients.map((ingredient, index) => {
-                return (
-                  <li key={index}>
-                    {ingredient.ingredientName}: {ingredient.ingredientAmount}
-                  </li>
-                )
-              })
-            }
-          </ul>
-        </div>
+      {RenderImage(recipe?.image || "")}
 
-        <div className='instructions'>
-          <h3>Instructions</h3>
-          <ul>
-            {
-              recipe?.instructions.map((instruction, index) => {
-                return (
-                  <li key={index}>{instruction}</li>
-                )
-              })
-            }
-          </ul>
-        </div>
-      </div>
-    </div>
+      <Modal.Dialog>
+        <Modal.Header>
+          <Modal.Title>Ingredients</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          {RenderIngredientsList()}
+        </Modal.Body>
+      </Modal.Dialog>
+
+      <Modal.Dialog>
+        <Modal.Header>
+          <Modal.Title>Instructions</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          {RenderInstructionsList()}
+        </Modal.Body>
+      </Modal.Dialog>
+    </>
   )
 }
