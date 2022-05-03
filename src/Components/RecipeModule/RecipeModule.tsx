@@ -84,7 +84,7 @@ export default function RecipeModule({ recipeList, activeUser }: any) {
 
 	return (
 		<>
-			<Tabs defaultActiveKey="profile" id="uncontrolled-tab-example" className="mb-3 recipe" activeKey={key} onSelect={(k) => setKey(k || "recipes")}>
+			<Tabs defaultActiveKey="profile" id="uncontrolled-tab-example" className="mb-3" activeKey={key} onSelect={(k) => setKey(k || "recipes")}>
 
 				<Tab eventKey="recipes" title="Recipes">
 					{RenderRecipeList()}

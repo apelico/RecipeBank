@@ -16,8 +16,6 @@ export default function Home() {
   },[])
 
   return (
-    <div className='page'>
-      <RecipeModule recipeList={recipes} />
-    </div>
+    <RecipeModule recipeList={recipes} />
   )
 }
