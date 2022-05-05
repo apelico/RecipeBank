@@ -1,12 +1,16 @@
 import { useEffect, useState } from 'react';
-import { NavLink, useParams } from 'react-router-dom'
-import RecipeModule from '../../Components/RecipeModule/RecipeModule';
-import { Recipe, User } from '../../Interfaces';
+import { useParams } from 'react-router-dom'
+import { Tabs, Tab } from 'react-bootstrap';
+import { Recipe } from '../../Interfaces';
 import './UserPage.css'
+import RecipeComponent from '../../Components/RecipeComponent/RecipeComponent';
+import RecipeListComponent from '../../Components/RecipeListComponent/RecipeListComponent';
 
 export default function UserPage() {
-  const [recipes, setRecipes] = useState<Recipe[]>([])
   const { username } = useParams();
+  const [key, setKey] = useState("user");
+  const [recipes, setRecipes] = useState<Recipe[]>([])
+  const [activeRecipe, setActiveRecipe] = useState<Recipe>()
 
   useEffect(() => {
     fetch('/api/getUserRecipes', {
@@ -18,9 +22,29 @@ export default function UserPage() {
     })
   }, [])
 
+  function SelectRecipe(selectedIndex: number) {
+    setKey("current")
+    setActiveRecipe(recipes[selectedIndex])
+  }
+
   return (
     <div className='page'>
-      <RecipeModule recipeList={recipes} />
+      <Tabs defaultActiveKey="profile" id="uncontrolled-tab-example" className="mb-3 recipe-module" activeKey={key} onSelect={(k) => setKey(k || "recipes")}>
+
+        <Tab eventKey="user" title={username} >
+
+        </Tab>
+
+        <Tab eventKey="recipes" title="Recipes">
+          <RecipeListComponent recipes={recipes} SelectRecipe={SelectRecipe} />
+        </Tab>
+
+        <Tab eventKey="current" title="Current">
+        {
+					(activeRecipe !== undefined) && <RecipeComponent recipe={activeRecipe} />
+				}
+        </Tab>
+      </Tabs>
     </div>
   )
 }
