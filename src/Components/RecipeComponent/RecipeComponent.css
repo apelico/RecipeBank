@@ -1,7 +1,14 @@
-.recipe-image{
+.recipe-component .recipe-image{
     display: block;
+    max-width:100%;
+    max-height:500px;
+    width: auto;
+    height: auto;
     margin: 0 auto;
-    max-width: 100%;
-    max-height: 500px;
     padding: 8px;
+}
+
+.recipe-component .favorite:hover{
+    cursor: pointer;
+    color: rgb(255, 235, 55);
 }

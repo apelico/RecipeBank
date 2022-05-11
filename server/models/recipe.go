@@ -9,6 +9,7 @@ type Recipe struct {
 	Ingredients  []Ingredients `bson:"ingredients" json:"ingredients"`
 	Instructions []string      `bson:"instructions" json:"instructions"`
 	Image        string        `bson:"image" json:"image"`
+	Description  string        `bson:"description" json:"description"`
 }
 
 type Ingredients struct {

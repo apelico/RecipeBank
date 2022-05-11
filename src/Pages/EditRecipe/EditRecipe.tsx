@@ -1,6 +1,6 @@
 import React from 'react'
 import { useEffect, useState } from 'react'
-import { Button, FormControl, InputGroup, Modal } from 'react-bootstrap'
+import { Button, Card, FormControl, InputGroup, Modal } from 'react-bootstrap'
 import { useNavigate, useParams, useLocation } from 'react-router-dom'
 import { EditType, IEdit, Ingredient, Recipe } from '../../Interfaces'
 import Resizer from "react-image-file-resizer";
@@ -68,24 +68,11 @@ export default function EditRecipe({ editType }: IEdit) {
 		}
 	}
 
-	const convertToBase64 = (file: any) => {
-		return new Promise((resolve, reject) => {
-			const fileReader = new FileReader();
-			fileReader.readAsDataURL(file);
-			fileReader.onload = () => {
-				resolve(fileReader.result);
-			};
-			fileReader.onerror = (error) => {
-				reject(error);
-			};
-		});
-	};
-
 	async function SetRecipeImage(imageFile: any) {
 		if (recipe === undefined) return;
 
 		const resizedFile = await resizeFile(imageFile)
-		
+
 		const r = { ...recipe }
 		r.image = resizedFile as string;
 
@@ -195,9 +182,28 @@ export default function EditRecipe({ editType }: IEdit) {
 	function RenderImage() {
 		return (
 			<>
-				<img className='recipe-image' src={recipe?.image} />
+				<Card.Img variant='top' className='recipe-image' src={recipe?.image} />
 				<input type='file' name='image' accept="image/*" onChange={e => { if (e.target.files !== null) { SetRecipeImage(e.target.files[0]) } }} />
 			</>
+		)
+	}
+
+	function RenderDescription() {
+		//if (recipe?.description === undefined) return;
+		return (
+			<Modal.Dialog>
+				<Modal.Header>
+					<Modal.Title>Description</Modal.Title>
+				</Modal.Header>
+				<InputGroup>
+					<FormControl as="textarea" aria-label="With textarea" maxLength={1000} rows={5} value={recipe?.description} onChange={e => {
+						const r = { ...recipe }
+						r.description = e.target.value;
+
+						setRecipe(r as Recipe);
+					}} />
+				</InputGroup>
+			</Modal.Dialog>
 		)
 	}
 
@@ -207,25 +213,38 @@ export default function EditRecipe({ editType }: IEdit) {
 				<Modal.Header>
 					<Modal.Title>{RenderTitle()}</Modal.Title>
 				</Modal.Header>
+			</Modal.Dialog>
 
+			<Modal.Dialog>
 				<Modal.Body>
 					{RenderImage()}
-				</Modal.Body>
-
-				<Modal.Body>
-					{RenderIngredients()}
-					<Button variant="primary" onClick={AddIngredient}>Add Ingredient</Button>
-				</Modal.Body>
-
-				<Modal.Body>
-					{RenderInstructions()}
-					<Button variant="primary" onClick={AddInstruction}>Add Instruction</Button>
-				</Modal.Body>
-
-				<Modal.Body>
-					<Button variant="primary" type='submit'>Submit</Button>
+					{RenderDescription()}
 				</Modal.Body>
 			</Modal.Dialog>
-		</form>
+
+			<Modal.Dialog>
+				<Modal.Header>
+					<Modal.Title>Ingredients</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+					{RenderIngredients()}
+				</Modal.Body>
+				<Button variant="primary" onClick={AddIngredient}>Add Ingredient</Button>
+			</Modal.Dialog>
+
+			<Modal.Dialog>
+				<Modal.Header>
+					<Modal.Title>Instructions</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+					{RenderInstructions()}
+				</Modal.Body>
+				<Button variant="primary" onClick={AddInstruction}>Add Instruction</Button>
+			</Modal.Dialog>
+
+			<Modal.Dialog>
+				<Button variant="primary" type='submit'>Submit</Button>
+			</Modal.Dialog>
+		</form >
 	)
 }

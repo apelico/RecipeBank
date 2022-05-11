@@ -16,7 +16,13 @@
 
 .edit-recipe .recipe-image{
     display: block;
+    max-width:100%;
+    max-height:500px;
+    width: auto;
+    height: auto;
     margin: 0 auto;
-    max-width: 100%;
-    max-height: 500px;
+}
+
+.edit-recipe textarea{
+    resize: none;
 }

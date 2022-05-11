@@ -10,6 +10,7 @@ export interface Recipe {
     ingredients: Ingredient[];
     instructions: string[];
     recipeTag?: RecipeTag;
+    description?: string;
     image?: string;
 }
 

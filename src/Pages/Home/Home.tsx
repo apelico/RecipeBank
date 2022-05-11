@@ -16,6 +16,7 @@ export default function Home() {
 			headers: { 'Content-Type': 'application/json' },
 		}).then(response => response.json()).then(data => {
 			setRecipes(data)
+			setActiveRecipe(recipes[0])
 		})
 	}, [])
 
@@ -31,11 +32,11 @@ export default function Home() {
 				<RecipeListComponent recipes={recipes} SelectRecipe={SelectRecipe} />
 			</Tab>
 
-			<Tab eventKey="current" title="Current">
-				{
-					(activeRecipe !== undefined) && <RecipeComponent recipe={activeRecipe} />
-				}
-			</Tab>
+			{
+				(activeRecipe !== undefined) && <Tab eventKey="current" title="Current">
+					<RecipeComponent recipe={activeRecipe} />
+				</Tab>
+			}
 		</Tabs>
 	)
 }

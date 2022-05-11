@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 import { useContext, useState } from 'react';
 import { userContext } from '../../Context'
 
-import { ListGroup, Modal } from 'react-bootstrap';
+import { Card, ListGroup, Modal, Accordion } from 'react-bootstrap';
 
 interface IRecipe {
 	recipe: Recipe
@@ -24,6 +24,14 @@ export default function RecipeComponent({ recipe }: IRecipe) {
 		}
 
 		return <></>
+	}
+
+	function ShowUserButtons() {
+		return (
+			<>
+				<i className="fa fa-star favorite" aria-hidden="true"></i>
+			</>
+		)
 	}
 
 	function RenderIngredients() {
@@ -57,21 +65,41 @@ export default function RecipeComponent({ recipe }: IRecipe) {
 		)
 	}
 
+	function RenderDescription() {
+
+		if (recipe.description === undefined || recipe.description === "") return;
+
+		return (
+			<Card.Body>
+				<Accordion>
+					<Accordion.Item eventKey="0">
+						<Accordion.Header>Description</Accordion.Header>
+						<Accordion.Body>
+							{recipe.description}
+						</Accordion.Body>
+					</Accordion.Item>
+				</Accordion>
+			</Card.Body>
+		)
+	}
+
 	function RenderImage(image: string) {
 		if (image === "") return
 
 		return (
 			<Modal.Dialog>
-				<img className='recipe-image' src={image} />
+				<Card.Img variant="top" className='recipe-image' src={image} />
+				{RenderDescription()}
 			</Modal.Dialog>
 		)
 	}
 
 	return (
-		<div>
+		<div className='recipe-component'>
 			<Modal.Dialog>
 				<Modal.Header>
 					<Modal.Title>{recipe.recipeName}</Modal.Title> <Modal.Title><span className='recipe-owner'>by: <NavLink to={`/users/${recipe.userOwner}`}>{recipe.userOwner}</NavLink></span></Modal.Title>
+
 				</Modal.Header>
 				<Modal.Body>
 					<ShowEditButton />

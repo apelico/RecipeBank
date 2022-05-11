@@ -9,3 +9,10 @@
     --active-color: rgb(0, 153, 255);
     margin-bottom: 50px;
 }
+
+.modal-header{
+    background-color: rgb(var(--bs-dark-rgb));
+    color: white;
+}
+
+.modal-body{}
